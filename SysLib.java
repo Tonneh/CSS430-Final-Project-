@@ -81,6 +81,12 @@ public class SysLib {
 				 Kernel.CSYNC, 0, null );
     }
 
+    public static int open(String filename, String mode) { 
+        String[] args = new String[2]; 
+        args[0] = filename; 
+        args[1] = mode; 
+        return Kernel.interrupt(Kernel.INTERRUPT_SOFTWARE, Kernel.OPEN, 0, args); 
+    }
     public static String[] stringToArgs( String s ) {
 	StringTokenizer token = new StringTokenizer( s," " );
 	String[] progArgs = new String[ token.countTokens( ) ];
