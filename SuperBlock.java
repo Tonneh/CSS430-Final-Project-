@@ -71,6 +71,7 @@ class SuperBlock {
 
     //dequeue the top block from the free list
     public int getFreeBlock() {
+        if (freeList > -1 && freeList < totalBlocks) {
         // get a new free block from the freelist 
         int freeBlockNumber = freeList; 
         byte[] data = new byte[Disk.blockSize]; // Read in the data from the first free block
@@ -84,8 +85,10 @@ class SuperBlock {
 
         sync();                               
         
-        return freeBlockNumber;                         
-
+        return freeBlockNumber;      
+        }      
+        return -1;   
+ 
     }
 
     //enqueue a given block to the end of the free list
