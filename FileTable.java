@@ -11,7 +11,33 @@ public class FileTable {
     // major public methods
     public synchronized FileTableEntry falloc( String filename, String mode ) {
 
-        
+        short iNumber = -1; 
+        Inode inode = null; 
+        while (true) {
+            iNumber = (filename.equals("/") ? 0 : dir.namei (filename)); 
+            if (iNumber >= 0) {
+                inode = new Inode(iNumber); 
+                if (mode.equals("r")) { 
+                    if (inode.flag == 2) {
+                        break; 
+                    } else if (inode.flag == 3) {
+                        try { wait(); } catch(InterruptedException e) {} 
+                    } else if (inode.flag == 4) { 
+                        iNumber = -1; 
+                        return null; 
+                    }
+                } else if (mode.equals("w")) {
+                    // not done yet. 
+
+                }
+            }
+
+        }
+        inode.count++; 
+        inode.toDisk(iNumber); 
+        FileTableEntry e = new FileTableEntry(inode, iNumber, mode); 
+        table.addElement(e); 
+        return e; 
     // allocate a new file (structure) table entry for this file name
     // allocate/retrieve and register the corresponding inode using dir
     // increment this inode's count
