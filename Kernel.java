@@ -3,6 +3,7 @@ import java.lang.reflect.*;
 import java.io.*;
 public class Kernel
 {
+    private static FileSystem fs; 
     // Interrupt requests
     public final static int INTERRUPT_SOFTWARE = 1;  // System calls
     public final static int INTERRUPT_DISK     = 2;  // Disk interrupts
@@ -170,7 +171,18 @@ return OK;
             return ERROR;
         }
     case CLOSE:   // to be implemented in project
-return OK;
+        if ((myTcb = scheduler.getMyTcb()) != null) { 
+            FileTableEntry ent = myTcb.getFtEnt(param);  
+            if (ent == null || fs.close(ent) == false) { 
+                return ERROR; 
+            }
+            if (myTcb.returnFd(param) != ent) { 
+                return ERROR;
+            }
+            return OK; 
+
+        } 
+    }
     case SIZE:    // to be implemented in project
 return OK;
     case SEEK:    // to be implemented in project
