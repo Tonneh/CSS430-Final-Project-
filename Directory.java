@@ -50,13 +50,12 @@ public class Directory {
     public short ialloc( String filename ) {
         // filename is the one of a file to be created.
         // allocates a new inode number for this filename
-        if (namei( filename ) == -1) {
-            int fs = filename.length();
-            for (int i = 0; i < fsize.length; i++) {
-                if (fsize[i] == 0) {   
-                    fsize[i] = fs;
-                    fnames[i] = filename.toCharArray();
-
+        if (namei( filename ) == -1) {                      // check to sure -1 
+            int fs = filename.length();                     // get file size 
+            for (int i = 0; i < fsize.length; i++) {        // loop through 
+                if (fsize[i] == 0) {                        // check if == 0 
+                    fsize[i] = fs;                          // set the fsize[i] to fs 
+                    fnames[i] = filename.toCharArray();     // fname[i] gets a chararray from filename 
                     return (short) i;
                 }
             }
@@ -66,21 +65,22 @@ public class Directory {
     public boolean ifree( short iNumber ) {
         // deallocates this inumber (inode number)
         // the corresponding file will be deleted.
-        if (iNumber < fsize.length && fsize[iNumber] > 0) {
-            fsize[iNumber] = 0;
-            Arrays.fill(fnames[iNumber], '\0');
+        if (iNumber < fsize.length && fsize[iNumber] > 0) {     // checks iNum exist adn that fsize[iNum] is greater than 0
+            fsize[iNumber] = 0;                                 // set to 0 for deletion 
             return true;
         }
         return false;
     }
     public short namei( String filename ) {
         // returns the inumber corresponding to this filename
-        for (int i = 0; i < fnames.length; i++){
-            if (filename.equals(new String(fnames[i],0, fsize[i])))
+        for (int i = 0; i < fnames.length; i++) {              // iterates thru looking for file name 
+            String temp = new String(fnames[i],0, fsize[i]);    
+            if (filename.equals(temp)) {                       // if equals return iNum 
                 return (short) i;
+            }
         }
 
-        return (short) -1;
+        return (short) -1; // return -1 if not found 
     }
     
 }
