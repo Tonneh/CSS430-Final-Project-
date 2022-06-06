@@ -19,14 +19,14 @@ public class FileTable {
         short iNumber = -1; 
         Inode inode = null; 
         while (true) {
-            iNumber = (filename.equals("/") ? 0 : dir.namei (filename)); 
+            iNumber = (filename.equals("/") ? 0 : dir.namei(filename)); 
             if (iNumber >= 0) {
                 inode = new Inode(iNumber); 
                 if (mode.compareTo("r") == 0) {  // if mode == read 
                     if (inode.flag == READ) {
                         break; 
                     } else if (inode.flag == WRITE) {
-                        try { wait(); } catch(InterruptedException e) {} 
+                        try { wait(); } catch(InterruptedException e) { return null; } return null; 
                     } else if (inode.flag == TODELETE) { 
                         iNumber = -1; 
                         return null; 
@@ -36,7 +36,7 @@ public class FileTable {
                         inode.flag = (short)WRITE; 
                         break; 
                     } else { 
-                        try { wait(); } catch(InterruptedException e) {} 
+                        try { wait(); } catch(InterruptedException e) { return null; } return null; 
                     }
                 }
             } else { // if inode is less than 0, file doesnt exist 
