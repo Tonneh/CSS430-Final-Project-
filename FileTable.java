@@ -42,6 +42,7 @@ public class FileTable {
             } else { // if inode is less than 0, file doesnt exist 
                 iNumber = dir.ialloc(filename); // allocate inum
                 inode = new Inode();            // make node for file 
+                break; 
             }
 
         }
