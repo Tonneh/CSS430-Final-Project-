@@ -23,28 +23,34 @@ public class FileTable {
             if (iNumber >= 0) {
                 inode = new Inode(iNumber); 
                 if (mode.compareTo("r") == 0) {  // if mode == read 
-                    if (inode.flag == READ) {
+                    if (inode.flag == UNUSED || inode.flag == USED) {
+                        inode.flag = (short)READ; 
+                        break; 
+                    }
+                    else if (inode.flag <= READ) {
                         break; 
                     } else if (inode.flag == WRITE) {
-                        try { wait(); } catch(InterruptedException e) { return null; } return null; 
+                        try { wait(); } catch(InterruptedException e) {} 
                     } else if (inode.flag == TODELETE) { 
                         iNumber = -1; 
                         return null; 
                     }
-                } else {    // if mode is w, w+, a
+                } else if (mode.compareTo("w") == 0|| mode.compareTo("w+") == 0 || mode.compareTo("a") == 0) {    // if mode is w, w+, a
                     if (inode.flag == USED || inode.flag == UNUSED) { 
                         inode.flag = (short)WRITE; 
                         break; 
                     } else { 
-                        try { wait(); } catch(InterruptedException e) { return null; } return null; 
+                        try { wait(); } catch(InterruptedException e) {} 
                     }
                 }
-            } else { // if inode is less than 0, file doesnt exist 
+            } else if (! (mode.compareTo("r") == 0)) { // if inode is less than 0, file doesnt exist 
                 iNumber = dir.ialloc(filename); // allocate inum
                 inode = new Inode();            // make node for file 
+                inode.flag = (short)WRITE; 
                 break; 
+            } else {
+                return null; 
             }
-
         }
         inode.count++; 
         inode.toDisk(iNumber); 
