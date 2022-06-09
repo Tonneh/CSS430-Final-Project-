@@ -190,12 +190,11 @@ public
           return ERROR;
         case STDOUT:
           System.out.print((String)args);
-          break;
+          return OK;
         case STDERR:
           System.err.print((String)args);
-          break;
+          return OK;
         }
-        return OK; 
         if ((myTcb = scheduler.getMyTcb()) != null) {       // check if TCB is null 
             FileTableEntry ftEnt = myTcb.getFtEnt(param);   // create an entry 
             if (ftEnt != null) {                            // if entry isnt null
